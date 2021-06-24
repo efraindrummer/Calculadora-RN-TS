@@ -14,7 +14,47 @@ export const CalculadoraScreen = () => {
     }
 
     const armarNumero = (numeroTexto: string) => {
-        setNumero(numero + numeroTexto);
+        //no aceptar doble puntos
+        if(numero.includes('.') && numeroTexto === '.') return;
+
+        if(numero.startsWith('0') || numero.startsWith('-0')){
+            //Punto decimal
+            if(numeroTexto === '.'){
+                setNumero(numero + numeroTexto);
+                //evaluar si es otro 0 y si hay un punto.
+            }else if(numeroTexto === '0' && numero.includes('.')){
+                setNumero(numero + numeroTexto);
+
+                //evaluar sin hay un numero diferente de 0 y no hya punto .
+            }else if(numeroTexto !== '0' && !numero.includes('.')){
+                setNumero(numeroTexto);
+
+                //evitar el 000.0
+            }else if(numeroTexto === '0' && !numero.includes('.')){
+                setNumero(numero);
+            }else{
+                setNumero(numero + numeroTexto);
+            }
+        }else{
+            setNumero(numero + numeroTexto);
+        }
+
+    }
+
+    const positivoNegativo = () => {
+        if(numero.includes('-')){
+            setNumero(numero.replace('-', ''));
+        }else{
+            setNumero('-' + numero);
+        }
+    }
+
+    const bntDelete = () => {
+        if (numero.length === 1 || numero === `-${numero.charAt(numero.length - 1)}`) {
+            setNumero('0');
+        }else{
+            setNumero(numero.substr(0, numero.length - 1));
+        }
     }
 
     return (
@@ -29,8 +69,8 @@ export const CalculadoraScreen = () => {
             {/* Fila de botones */}
             <View style={styles.fila}>
                 <BotonCalc texto="C" color="#9B9B9B" accion={limpiar} />
-                <BotonCalc texto="+/-" color="#9B9B9B" accion={limpiar} />
-                <BotonCalc texto="del" color="#9B9B9B" accion={limpiar} />
+                <BotonCalc texto="+/-" color="#9B9B9B" accion={positivoNegativo} />
+                <BotonCalc texto="del" color="#9B9B9B" accion={bntDelete} />
                 <BotonCalc texto="/" color="#FF9427" accion={limpiar} />
             </View>
             {/* Fila de botones */}
